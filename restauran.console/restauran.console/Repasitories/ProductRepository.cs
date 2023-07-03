@@ -1,38 +1,112 @@
-﻿using restauran.console.Interfaces.Repasitories;
+﻿using Newtonsoft.Json;
+using restauran.console.Constants;
+using restauran.console.Interfaces.Repasitories;
 using restauran.console.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace restauran.console.Repasitories
 {
     public class ProductRepository : IProductRepasitory
     {
-        public Task<bool> CreateAsync(Product obj)
+        private string _dbpath = DbConstants.PRODUCTS_DB;
+        public async Task<bool> CreateAsync(Product obj)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string json = await File.ReadAllTextAsync(_dbpath);
+                var products = JsonConvert.DeserializeObject<List<Product>>(json);
+                products!.Add(obj);
+                json = JsonConvert.SerializeObject(products);
+                await File.WriteAllTextAsync(_dbpath, json);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<bool> DeleteAsync(long id)
+        public async Task<bool> DeleteAsync(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string json = await File.ReadAllTextAsync(_dbpath);
+                var products = JsonConvert.DeserializeObject<List<Product>>(json);
+                foreach (var item in products)
+                {
+                    if (item.Id == id)
+                    {
+                        products.Remove(item);
+                        break;
+                    }
+                }
+                json = JsonConvert.SerializeObject(products);
+                await File.WriteAllTextAsync(_dbpath, json);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<IList<Product>> GetAllAsync()
+        public async Task<IList<Product>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            string json = await File.ReadAllTextAsync(_dbpath);
+            var products = JsonConvert.DeserializeObject<List<Product>>(json);
+            return products!;
         }
 
-        public Task<Product> GetAsync(int id)
+        public async Task<IList<Product>> GetAllWhereAsync(Func<Product, bool> predicate)
         {
-            throw new NotImplementedException();
+            string json = await File.ReadAllTextAsync(_dbpath);
+            var products = JsonConvert.DeserializeObject<List<Product>>(json);
+            return products!.Where(predicate).ToList();
         }
 
-        public Task<bool> UpdateAsync(long id, Product obj)
+        public async Task<Product> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string json = await File.ReadAllTextAsync(_dbpath);
+                var products = JsonConvert.DeserializeObject<List<Product>>(json);
+                foreach (var item in products)
+                {
+                    if (item.Id == id)
+                    {
+                        return item;
+                    }
+                }
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> UpdateAsync(long id, Product obj)
+        {
+            try
+            {
+                string json = await File.ReadAllTextAsync(_dbpath);
+                var products = JsonConvert.DeserializeObject<List<Product>>(json);
+                for (int i = 0; i < products.Count; i++)
+                {
+                    if (products[i].Id == id)
+                    {
+                        products[i] = obj;
+                    }
+                }
+                json = JsonConvert.SerializeObject(products);
+                await File.WriteAllTextAsync(_dbpath, json);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
