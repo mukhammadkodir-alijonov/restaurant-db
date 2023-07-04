@@ -1,2 +1,2 @@
 # restaurant-db
-restaurant-db is console aplication. There is not any UI.
+restaurant-db is console aplication. There is not UI side.
