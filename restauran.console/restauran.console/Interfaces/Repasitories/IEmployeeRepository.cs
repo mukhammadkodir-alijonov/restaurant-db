@@ -5,7 +5,8 @@ namespace restauran.console.Interfaces.Repasitories
 {
     public interface IEmployeeRepository :
         ICreatable<Employee>, IReadable<Employee>,
-        IUpdateable<Employee>, IDeleteable<Employee>
+        IUpdateable<Employee>, IDeleteable<Employee>,
+        ISearchable<Employee>
     {
     }
 }

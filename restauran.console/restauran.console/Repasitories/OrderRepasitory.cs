@@ -5,17 +5,17 @@ using restauran.console.Models;
 
 namespace restauran.console.Repasitories
 {
-    public class ProductRepository : IProductRepasitory
+    public class OrderRepasitory : IOrderRepository
     {
-        private string _dbpath = DbConstants.PRODUCTS_DB;
-        public async Task<bool> CreateAsync(Product obj)
+        private string _dbpath = DbConstants.ORDERS_DB;
+        public async Task<bool> CreateAsync(Order obj)
         {
             try
             {
                 string json = await File.ReadAllTextAsync(_dbpath);
-                var products = JsonConvert.DeserializeObject<List<Product>>(json);
-                products!.Add(obj);
-                json = JsonConvert.SerializeObject(products);
+                var Orders = JsonConvert.DeserializeObject<List<Order>>(json);
+                Orders!.Add(obj);
+                json = JsonConvert.SerializeObject(Orders);
                 await File.WriteAllTextAsync(_dbpath, json);
                 return true;
             }
@@ -30,16 +30,16 @@ namespace restauran.console.Repasitories
             try
             {
                 string json = await File.ReadAllTextAsync(_dbpath);
-                var products = JsonConvert.DeserializeObject<List<Product>>(json);
-                foreach (var item in products)
+                var Orders = JsonConvert.DeserializeObject<List<Order>>(json);
+                foreach (var item in Orders)
                 {
                     if (item.Id == id)
                     {
-                        products.Remove(item);
+                        Orders.Remove(item);
                         break;
                     }
                 }
-                json = JsonConvert.SerializeObject(products);
+                json = JsonConvert.SerializeObject(Orders);
                 await File.WriteAllTextAsync(_dbpath, json);
                 return true;
             }
@@ -49,27 +49,20 @@ namespace restauran.console.Repasitories
             }
         }
 
-        public async Task<IList<Product>> GetAllAsync()
+        public async Task<IList<Order>> GetAllAsync()
         {
             string json = await File.ReadAllTextAsync(_dbpath);
-            var products = JsonConvert.DeserializeObject<List<Product>>(json);
-            return products!;
+            var Orders = JsonConvert.DeserializeObject<List<Order>>(json);
+            return Orders!;
         }
 
-        public async Task<IList<Product>> GetAllWhereAsync(Func<Product, bool> predicate)
-        {
-            string json = await File.ReadAllTextAsync(_dbpath);
-            var products = JsonConvert.DeserializeObject<List<Product>>(json);
-            return products!.Where(predicate).ToList();
-        }
-
-        public async Task<Product> GetAsync(int id)
+        public async Task<Order> GetAsync(int id)
         {
             try
             {
                 string json = await File.ReadAllTextAsync(_dbpath);
-                var products = JsonConvert.DeserializeObject<List<Product>>(json);
-                foreach (var item in products)
+                var Orders = JsonConvert.DeserializeObject<List<Order>>(json);
+                foreach (var item in Orders)
                 {
                     if (item.Id == id)
                     {
@@ -84,20 +77,20 @@ namespace restauran.console.Repasitories
             }
         }
 
-        public async Task<bool> UpdateAsync(long id, Product obj)
+        public async Task<bool> UpdateAsync(long id, Order obj)
         {
             try
             {
                 string json = await File.ReadAllTextAsync(_dbpath);
-                var products = JsonConvert.DeserializeObject<List<Product>>(json);
-                for (int i = 0; i < products.Count; i++)
+                var Orders = JsonConvert.DeserializeObject<List<Order>>(json);
+                for (int i = 0; i < Orders.Count; i++)
                 {
-                    if (products[i].Id == id)
+                    if (Orders[i].Id == id)
                     {
-                        products[i] = obj;
+                        Orders[i] = obj;
                     }
                 }
-                json = JsonConvert.SerializeObject(products);
+                json = JsonConvert.SerializeObject(Orders);
                 await File.WriteAllTextAsync(_dbpath, json);
                 return true;
             }
