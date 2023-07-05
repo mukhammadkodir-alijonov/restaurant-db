@@ -18,7 +18,7 @@
         public static void Successful(string message)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Muvaffaqqiyatli!");
+            Console.WriteLine("Muvaffaqqiyatli");
             Console.WriteLine(message);
             Console.ForegroundColor = ConsoleColor.White;
         }
