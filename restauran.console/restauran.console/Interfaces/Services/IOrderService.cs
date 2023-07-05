@@ -5,6 +5,6 @@ namespace restauran.console.Interfaces.Services
     public interface IOrderService
     {
         public Task<IEnumerable<OrderViewModel>> GetAllAsync();
-        public Task<OrderViewModel> GetAsync(long id);
+        public Task<OrderViewModel> GetAsync(int id);
     }
 }

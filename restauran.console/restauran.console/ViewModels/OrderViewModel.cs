@@ -11,7 +11,11 @@ namespace restauran.console.ViewModels
         public int MumberCount { get; set; }
         public string EmployeeName { get; set; } = string.Empty;
         public bool isPaid { get; set; }
-        public IEnumerable<OrderDetailViewModel> orderDetails { get; set; }
+        public IList<OrderDetailViewModel> orderDetails{ get; set; }
+        public OrderViewModel()
+        {
+            orderDetails  = new List<OrderDetailViewModel>();
+        }
         public static implicit operator OrderViewModel(Order order)
         {
             return new OrderViewModel()

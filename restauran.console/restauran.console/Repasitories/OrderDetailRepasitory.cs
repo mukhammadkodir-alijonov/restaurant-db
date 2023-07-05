@@ -5,7 +5,7 @@ using restauran.console.Models;
 
 namespace restauran.console.Repasitories
 {
-    public class OrderDetailRepasitory : IOrderDeatilRepository
+    public class OrderDetailViewRepasitory : IOrderDeatilRepository
     {
         private string _dbpath = DbConstants.ORDER_DETAILS_DB;
         public async Task<bool> CreateAsync(OrderDetail obj)

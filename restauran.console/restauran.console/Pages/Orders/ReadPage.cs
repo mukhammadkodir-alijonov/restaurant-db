@@ -12,7 +12,7 @@ namespace restauran.console.Pages.Orders
         public static void Run()
         {
             Console.WriteLine("Buyrutma id sini kiriting: ");
-            long id  = long.Parse(Console.ReadLine());
+            int id  = int.Parse(Console.ReadLine());
             var consoleTabale = new ConsoleTable("Id", "Stol raqami", "Summa", "Holati", "Misoz soni", "Ma'sul ishchi", "Vaqt");
             IOrderService orderService = new OrderService();
             var order = orderService.GetAsync(id).Result;
@@ -21,8 +21,15 @@ namespace restauran.console.Pages.Orders
                 order.MumberCount, order.EmployeeName, order.OrderDate);
             consoleTabale.Write();
             MessageHelper.Information("BUyrutma maxsulotlari");
-            consoleTabale = new ConsoleTable("BuyrutmaRaqami","maxsulot nomi","");
+            consoleTabale = new ConsoleTable("BuyrutmaRaqami","Maxsulot nomi","Soni","Narxi");
 
+            foreach ( var orderDetailViewModel in order.orderDetails)
+            {
+                consoleTabale.AddRow(orderDetailViewModel.Id, orderDetailViewModel.ProductName, 
+                                    orderDetailViewModel.Quantity, orderDetailViewModel.Price);
+
+            }
+            consoleTabale.Write();
         }
     }
 }

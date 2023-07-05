@@ -10,12 +10,14 @@ namespace restauran.console.Services
         private readonly IEmployeeRepository _employeeRepasitory;
         private readonly IOrderRepository _orderRepasitory;
         private readonly IOrderDeatilRepository _orderDetailRepasitory;
+        private readonly IProductRepasitory _productRepasitory;
 
         public OrderService()
         {
             this._employeeRepasitory = new EmployeeRepasitory();
             this._orderRepasitory = new OrderRepasitory();
-            this._orderDetailRepasitory = new OrderDetailRepasitory();
+            this._orderDetailRepasitory = new OrderDetailViewRepasitory();
+            this._productRepasitory = new ProductRepository();
         }
         public async Task<IEnumerable<OrderViewModel>> GetAllAsync()
         {
@@ -31,9 +33,29 @@ namespace restauran.console.Services
             return orderViewModels;
         }
 
-        public Task<OrderViewModel> GetAsync(long id)
+        public async Task<OrderViewModel> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            var order = await _orderRepasitory.GetAsync(id);
+            var orderViewModel = (OrderViewModel)order;
+            orderViewModel.EmployeeName = (await _employeeRepasitory.GetAsync(order.EmployeeId)).FullName;
+
+            var orderDetails = (await _orderDetailRepasitory.GetAllAsync())
+                .Where(x=>x.OrderId == order.Id)
+                .ToList();
+
+            foreach (var orderDetail in orderDetails)
+            {
+                var product = await _productRepasitory.GetAsync(orderDetail.ProductId);
+                OrderDetailViewModel orderDetailViewModel = new OrderDetailViewModel()
+                {
+                    Id = orderDetail.Id,
+                    Quantity = orderDetail.Quantity,    
+                    Price = orderDetail.Quantity * product.Price,
+                    ProductName = product.Name
+                };
+                orderViewModel.orderDetails.Add(orderDetailViewModel);
+            }
+            return orderViewModel;
         }
     }
 }
